@@ -33,7 +33,7 @@ EOF
     exit 0
 }
 
-while getopts ":b:c:g:hr:t:x:o:n:u:" opt; do
+while getopts ":c:g:hrbtx:o:n:u:" opt; do
   case $opt in
     b)
      blastfile=$OPTARG
