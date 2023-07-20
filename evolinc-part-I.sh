@@ -33,7 +33,7 @@ EOF
     exit 0
 }
 
-while getopts ":c:g:hrbtx:o:n:u:" opt; do
+while getopts ":b:c:g:hr:t:x:o:n:u:" opt; do
   case $opt in
     b)
      blastfile=$OPTARG
@@ -219,7 +219,7 @@ find . -type f -name longest_orfs.cds -exec cat '{}' \; | cat > longest_orfs_cat
 find . -type f -name longest_orfs.pep -exec cat '{}' \; | cat > longest_orfs_cat.pep 
 
 # Blasting the transcripts to uniprot db
-diamond blastp -d /evolinc_docker/uniprot_sprot -q longest_orfs_cat.pep -o longest_orfs_cat.pep.blastp -p $threads -k 1 --outfmt 6 -e 1e-5 
+diamond blastp -d /evolinc_docker/uniprot_sprot.dmnd -q longest_orfs_cat.pep -o longest_orfs_cat.pep.blastp -p $threads -k 1 --outfmt 6 -e 1e-5   ##added .dmnd to blast file
 
 # Genes in the protein coding genes
 sed 's/|.*//' longest_orfs_cat.cds | sed -ne 's/>//p' | uniq > longest_orfs.cds.genes
