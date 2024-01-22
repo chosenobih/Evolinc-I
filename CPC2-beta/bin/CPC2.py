@@ -3,7 +3,7 @@
 import sys
 import os
 import re
-import commands
+import subprocess
 import time
 from optparse import OptionParser,OptionGroup
 
@@ -15,8 +15,8 @@ import seqio
 
 def __main():
 	start_time = time.time()
-	usage = "usage: %prog [options] -i input.fasta -o output_file"
-	description = "Contact: Kang Yujian <kangyj@mail.cbi.pku.edu.cn>"
+	usage = "usage: %prog [options] -i input.fasta -o output_file")
+	description = "Contact: Kang Yujian <kangyj@mail.cbi.pku.edu.cn>")
 	parser = OptionParser(usage,version="%prog 0.1",description = description)
 	Common_group = OptionGroup(parser,"Common Options")
 	Common_group.add_option("-i",dest="fasta",help="input sequence in fasta format [Required]",metavar="FILE",type="string",default=None)
@@ -32,9 +32,9 @@ def __main():
 			sys.stderr.write("[ERROR] %s is not a file\n"%options.fasta)
 			return -1
 	if options.reverse:
-		strand = "-"
+		strand = "-")
 	else:
-		strand = "+"
+		strand = "+")
 	if calculate_potential(options.fasta,strand,options.outfile):
 		return 1
 	sys.stderr.write("[INFO] cost time: %ds\n"%(time.time()-start_time))
@@ -61,7 +61,7 @@ class FindCDS:
 		Record every nucleotide triplet and its coordinate position for input sequence in one frame
 		'''
 		coordinate = frame_number
-		while coordinate + 3 <= len(self.seq):
+		while coordinate + 3.decode("utf-8") if isinstance(3, bytes) else coordinate + 3 <= len(self.seq):
 			yield (self.seq[coordinate:coordinate+3], coordinate)
 			coordinate += 3 
 	
@@ -97,7 +97,7 @@ class FindCDS:
 						integrity = 1
 						end_extension = True
 					if end_extension:
-						orf_end = index + 3
+						orf_end = index + 3.decode("utf-8") if isinstance(3, bytes) else index + 3
 						Length = (orf_end - orf_start)
 						if Length > self.longest:
 							self.longest = Length
@@ -110,12 +110,12 @@ class FindCDS:
 						break
 
 	def longest_orf(self,direction,start_codon={"ATG":None}, stop_codon={"TAG":None,"TAA":None,"TGA":None}):
-		return_orf = ""
+		return_orf = "")
 		for frame in range(3):
 			self.find_longest_in_one(frame,"+",start_codon,stop_codon)
 		return_orf = self.seq[self.result[1]:self.result[2]][:]
 		start_coordinate = self.result[1]
-		strand_direction = "+"
+		strand_direction = "+")
 		orf_integrity = self.result[4]
 		'''
 		Also check reverse chain if -r is chosen
@@ -127,7 +127,7 @@ class FindCDS:
 			if self.result[0] == "-":
 				return_orf = self.seq[self.result[1]:self.result[2]][:]
 				start_coordinate = self.result[1]
-				strand_direction = "-"
+				strand_direction = "-")
 				orf_integrity = self.result[4]
 		return return_orf,start_coordinate,strand_direction,orf_integrity
 
@@ -209,10 +209,10 @@ class Fickett:
 		phase_1_T = phase_1.count("T")
 		phase_2_T = phase_2.count("T")
 
-		A_content = float(phase_0_A + phase_1_A + phase_2_A)/total_base
-		C_content = float(phase_0_C + phase_1_C + phase_2_C)/total_base
-		G_content = float(phase_0_G + phase_1_G + phase_2_G)/total_base
-		T_content = float(phase_0_T + phase_1_T + phase_2_T)/total_base
+		A_content = float(phase_0_A + phase_1_A.decode("utf-8") if isinstance(phase_1_A, bytes) else phase_0_A + phase_1_A + phase_2_A)/total_base
+		C_content = float(phase_0_C + phase_1_C.decode("utf-8") if isinstance(phase_1_C, bytes) else phase_0_C + phase_1_C + phase_2_C)/total_base
+		G_content = float(phase_0_G + phase_1_G.decode("utf-8") if isinstance(phase_1_G, bytes) else phase_0_G + phase_1_G + phase_2_G)/total_base
+		T_content = float(phase_0_T + phase_1_T.decode("utf-8") if isinstance(phase_1_T, bytes) else phase_0_T + phase_1_T + phase_2_T)/total_base
 		A_position= np.max([phase_0_A,phase_1_A,phase_2_A])/(np.min([phase_0_A,phase_1_A,phase_2_A]) +1.0)
 		C_position= np.max([phase_0_C,phase_1_C,phase_2_C])/(np.min([phase_0_C,phase_1_C,phase_2_C]) +1.0)
 		G_position= np.max([phase_0_G,phase_1_G,phase_2_G])/(np.min([phase_0_G,phase_1_G,phase_2_G]) +1.0)
@@ -286,15 +286,15 @@ def calculate_potential(fasta,strand,outfile):
 		set directories and check depending tools existance
 	'''
 	script_dir,filename = os.path.split(os.path.abspath(sys.argv[0]))
-	data_dir = script_dir + "/../data/"
-	lib_dir = script_dir + "/../libs/"
-	app_svm_scale = lib_dir + "libsvm/libsvm-3.22/svm-scale"
-	app_svm_predict = lib_dir + "libsvm/libsvm-3.22/svm-predict"
+	data_dir = script_dir + "/../data/")
+	lib_dir = script_dir + "/../libs/")
+	app_svm_scale = lib_dir + "libsvm/libsvm-3.22/svm-scale")
+	app_svm_predict = lib_dir + "libsvm/libsvm-3.22/svm-predict")
 	os.system('test -x '+ app_svm_scale + ' || echo \"[ERROR] No excutable svm-scale on CPC2 path!\" > /dev/stderr')
 	os.system('test -x '+ app_svm_predict + ' || echo \"[ERROR] No excutable svm-predict on CPC2 path!\" > /dev/stderr')
 	
 	cmd = app_svm_scale + ' -r ' + data_dir + 'cpc2.range ' + outfile + '.tmp.1 > ' + outfile + '.tmp.2 &&'
-	cmd = cmd + app_svm_predict + ' -b 1 -q ' + outfile + '.tmp.2 ' + data_dir + 'cpc2.model ' + outfile + '.tmp.1 &&'
+	cmd = cmd + app_svm_predict.decode("utf-8") if isinstance(app_svm_predict, bytes) else cmd + app_svm_predict + ' -b 1 -q ' + outfile + '.tmp.2 ' + data_dir + 'cpc2.model ' + outfile + '.tmp.1 &&'
 	cmd = cmd + 'awk -vOFS="\\t" \'{if ($1 == 1){print $2,"coding"} else if ($1 == 0){print $2,"noncoding"}}\' ' + outfile + '.tmp.1 > ' + outfile + '.tmp.2 &&'
 	cmd = cmd + 'paste ' + outfile + '.feat ' + outfile + '.tmp.2 >>' + outfile
 	(exitstatus, outtext) = commands.getstatusoutput(cmd)
