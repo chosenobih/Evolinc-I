@@ -11,12 +11,12 @@ import numpy as np
 from Bio.Seq import Seq
 from Bio.SeqUtils import ProtParam
 
-import seqio
+from Bio import SeqIO
 
 def __main():
 	start_time = time.time()
-	usage = "usage: %prog [options] -i input.fasta -o output_file")
-	description = "Contact: Kang Yujian <kangyj@mail.cbi.pku.edu.cn>")
+	usage = "usage: %prog [options] -i input.fasta -o output_file"
+	description = "Contact: Kang Yujian <kangyj@mail.cbi.pku.edu.cn>"
 	parser = OptionParser(usage,version="%prog 0.1",description = description)
 	Common_group = OptionGroup(parser,"Common Options")
 	Common_group.add_option("-i",dest="fasta",help="input sequence in fasta format [Required]",metavar="FILE",type="string",default=None)
@@ -32,9 +32,9 @@ def __main():
 			sys.stderr.write("[ERROR] %s is not a file\n"%options.fasta)
 			return -1
 	if options.reverse:
-		strand = "-")
+		strand = "-"
 	else:
-		strand = "+")
+		strand = "+"
 	if calculate_potential(options.fasta,strand,options.outfile):
 		return 1
 	sys.stderr.write("[INFO] cost time: %ds\n"%(time.time()-start_time))
@@ -110,12 +110,12 @@ class FindCDS:
 						break
 
 	def longest_orf(self,direction,start_codon={"ATG":None}, stop_codon={"TAG":None,"TAA":None,"TGA":None}):
-		return_orf = "")
+		return_orf = ""
 		for frame in range(3):
 			self.find_longest_in_one(frame,"+",start_codon,stop_codon)
 		return_orf = self.seq[self.result[1]:self.result[2]][:]
 		start_coordinate = self.result[1]
-		strand_direction = "+")
+		strand_direction = "+"
 		orf_integrity = self.result[4]
 		'''
 		Also check reverse chain if -r is chosen
@@ -127,7 +127,7 @@ class FindCDS:
 			if self.result[0] == "-":
 				return_orf = self.seq[self.result[1]:self.result[2]][:]
 				start_coordinate = self.result[1]
-				strand_direction = "-")
+				strand_direction = "-"
 				orf_integrity = self.result[4]
 		return return_orf,start_coordinate,strand_direction,orf_integrity
 
@@ -286,10 +286,10 @@ def calculate_potential(fasta,strand,outfile):
 		set directories and check depending tools existance
 	'''
 	script_dir,filename = os.path.split(os.path.abspath(sys.argv[0]))
-	data_dir = script_dir + "/../data/")
-	lib_dir = script_dir + "/../libs/")
-	app_svm_scale = lib_dir + "libsvm/libsvm-3.22/svm-scale")
-	app_svm_predict = lib_dir + "libsvm/libsvm-3.22/svm-predict")
+	data_dir = script_dir + "/../data/"
+	lib_dir = script_dir + "/../libs/"
+	app_svm_scale = lib_dir + "libsvm/libsvm-3.22/svm-scale"
+	app_svm_predict = lib_dir + "libsvm/libsvm-3.22/svm-predict"
 	os.system('test -x '+ app_svm_scale + ' || echo \"[ERROR] No excutable svm-scale on CPC2 path!\" > /dev/stderr')
 	os.system('test -x '+ app_svm_predict + ' || echo \"[ERROR] No excutable svm-predict on CPC2 path!\" > /dev/stderr')
 	
