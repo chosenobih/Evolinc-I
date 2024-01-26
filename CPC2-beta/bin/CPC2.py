@@ -251,7 +251,7 @@ def calculate_potential(fasta,strand,outfile):
 	ftmp_result.write("\t".join(map(str,["#ID","peptide_length","Fickett_score","pI","ORF_integrity","coding_probability","label"]))+"\n")
 	ftmp_result.close()
 	fickett_obj = Fickett()
-	for seq in SeqIO.fasta_read(fasta):
+	for seq in SeqIO.read(fasta, "fasta"):
 		seqid = seq.id
 		seqRNA = ptU.sub("T",str(seq.seq).strip())
 		'''seqRNA:transcript full sequence'''
