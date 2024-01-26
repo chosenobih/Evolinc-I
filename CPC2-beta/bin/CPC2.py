@@ -78,7 +78,7 @@ class FindCDS:
 		'''
 		while True:
 			try: 
-				codon,index = triplet_got.next()
+				codon,index = next(triplet_got)
 			except StopIteration:
 				break 
 			if codon in starts and codon not in stops:
@@ -89,7 +89,7 @@ class FindCDS:
 				end_extension = False
 				while True:
 					try: 
-						codon,index = triplet_got.next()
+						codon,index = next(triplet_got)
 					except StopIteration:
 						end_extension = True
 						integrity = -1
