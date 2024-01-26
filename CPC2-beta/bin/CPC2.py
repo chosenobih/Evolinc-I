@@ -61,7 +61,7 @@ class FindCDS:
 		Record every nucleotide triplet and its coordinate position for input sequence in one frame
 		'''
 		coordinate = frame_number
-		while coordinate + 3.decode("utf-8") if isinstance(3, bytes) else coordinate + 3 <= len(self.seq):
+		while coordinate + 3 <= len(self.seq):
 			yield (self.seq[coordinate:coordinate+3], coordinate)
 			coordinate += 3 
 	
@@ -97,7 +97,7 @@ class FindCDS:
 						integrity = 1
 						end_extension = True
 					if end_extension:
-						orf_end = index + 3.decode("utf-8") if isinstance(3, bytes) else index + 3
+						orf_end = index + 3
 						Length = (orf_end - orf_start)
 						if Length > self.longest:
 							self.longest = Length
