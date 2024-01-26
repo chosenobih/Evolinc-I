@@ -62,8 +62,8 @@ ENV BINPATH /usr/bin
 WORKDIR /evolinc_docker
 
 # cpan
-RUN curl -L http://cpanmin.us | perl - App::cpanminus && \
-    cpanm URI/Escape.pm
+RUN curl -L http://cpanmin.us | perl - App::cpanminus
+RUN cpanm URI/Escape.pm
 
 RUN apt-get update && apt-get install -y \
     pkg-config \
