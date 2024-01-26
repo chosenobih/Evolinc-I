@@ -245,13 +245,13 @@ def calculate_potential(fasta,strand,outfile):
 	'''
 	strinfoAmbiguous = re.compile("X|B|Z|J|U",re.I)
 	ptU = re.compile("U",re.I)
-	ftmp_feat = file(outfile + ".feat","w")
-	ftmp_svm = file(outfile + ".tmp.1","w")
-	ftmp_result = file(outfile,"w")
+	ftmp_feat = open(outfile + ".feat","w")
+	ftmp_svm = open(outfile + ".tmp.1","w")
+	ftmp_result = open(outfile,"w")
 	ftmp_result.write("\t".join(map(str,["#ID","peptide_length","Fickett_score","pI","ORF_integrity","coding_probability","label"]))+"\n")
 	ftmp_result.close()
 	fickett_obj = Fickett()
-	for seq in seqio.fasta_read(fasta):
+	for seq in SeqIO.fasta_read(fasta):
 		seqid = seq.id
 		seqRNA = ptU.sub("T",str(seq.seq).strip())
 		'''seqRNA:transcript full sequence'''
@@ -297,14 +297,14 @@ def calculate_potential(fasta,strand,outfile):
 	cmd = cmd + app_svm_predict.decode("utf-8") if isinstance(app_svm_predict, bytes) else cmd + app_svm_predict + ' -b 1 -q ' + outfile + '.tmp.2 ' + data_dir + 'cpc2.model ' + outfile + '.tmp.1 &&'
 	cmd = cmd + 'awk -vOFS="\\t" \'{if ($1 == 1){print $2,"coding"} else if ($1 == 0){print $2,"noncoding"}}\' ' + outfile + '.tmp.1 > ' + outfile + '.tmp.2 &&'
 	cmd = cmd + 'paste ' + outfile + '.feat ' + outfile + '.tmp.2 >>' + outfile
-	(exitstatus, outtext) = commands.getstatusoutput(cmd)
+	(exitstatus, outtext) = subprocess.getstatusoutput(cmd)
 	os.system('rm -f ' + outfile + '.tmp.1 ' + outfile + '.tmp.2')
 	#	subprocess.call("Rscript " + outfile + '.r', shell=True)
 	#except:
 	#	pass
 	if exitstatus == 0:
 		rm_cmd = "rm -f " + outfile + '.feat'
-		commands.getstatusoutput(rm_cmd)
+		subprocess.getstatusoutput(rm_cmd)
 		sys.stderr.write("[INFO] Running Done!\n")
 		return 0
 	else:
