@@ -1,7 +1,7 @@
 #!/usr/bin/Rscript
 
 # Install dependencies
-library(Biostrings)
+library('Biostrings')
 library(splitstackshape)
 library(dplyr)
 library(getopt)
