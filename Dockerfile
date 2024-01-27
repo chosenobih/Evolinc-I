@@ -22,9 +22,9 @@ RUN apt-get update && apt-get install -y g++ \
 		wget \
 		curl \
 		bcftools \
-		python-matplotlib \
-		python-numpy \
-        	python-pandas \
+		python3-matplotlib \
+		python3-numpy \
+        	python3-pandas \
                 python3 \
                 python3-pip
 
