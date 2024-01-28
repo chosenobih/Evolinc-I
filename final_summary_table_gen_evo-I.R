@@ -1,10 +1,10 @@
 #!/usr/bin/Rscript
 
 # Install dependencies
-library(splitstackshape)
+# library(Biostrings)
 library(dplyr)
 library(getopt)
-library(splitstackshape)
+# library(splitstackshape)
 library(data.table)
 
 args<-commandArgs(TRUE)
