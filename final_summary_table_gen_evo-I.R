@@ -1,5 +1,3 @@
-#!/usr/bin/Rscript
-
 # Install dependencies
 # library(Biostrings)
 library(dplyr)
