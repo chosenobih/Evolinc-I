@@ -76,7 +76,7 @@ RUN apt-get update && apt-get install -y \
     gfortran
 
 # Install R packages using Conda
-RUN conda install -c r r-dplyr r-RPostgreSQL r-httr
+RUN conda install -c r r-RPostgreSQL r-httr
 
 # R libraries
 RUN apt-get update && apt-get upgrade -y && \
@@ -85,10 +85,16 @@ RUN apt-get update && apt-get upgrade -y && \
     gpg --export E298A3A825C0D65DFD57CBB651716619E084DAB9 | apt-key add - && \
     add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" && \
     apt-get install -y r-base && \
-    Rscript -e "options(repos = list(CRAN = 'https://cloud.r-project.org/')); install.packages('BiocManager')" && \
-    Rscript -e "BiocManager::install('Biostrings')" && \
-    Rscript -e 'install.packages("openssl", dependencies = TRUE,  repos="http://cran.rstudio.com/")' && \
     Rscript -e 'install.packages("splitstackshape", dependencies = TRUE, repos="http://cran.rstudio.com/");' && \
+    # Rscript -e 'install.packages("splitstackshape", dependencies = TRUE, repos="http://cran.rstudio.com/");' && \
+    Rscript -e 'install.packages("dplyr", dependencies = TRUE, repos="http://cran.rstudio.com/");' && \
+    Rscript -e 'install.packages("tidyr", dependencies = TRUE, repos="http://cran.rstudio.com/");' && \
+    Rscript -e 'install.packages("data.table", dependencies = TRUE, repos="http://cran.rstudio.com/");' && \
+    Rscript -e 'install.packages("BiocManager", dependencies = TRUE, repos="http://cran.rstudio.com/");' && \
+    Rscript -e "BiocManager::install('Biostrings')" && \
+    # Rscript -e "options(repos = list(CRAN = 'https://cloud.r-project.org/')); install.packages('BiocManager')" && \
+    # Rscript -e "BiocManager::install('Biostrings')" && \
+    Rscript -e 'install.packages("openssl", dependencies = TRUE,  repos="http://cran.rstudio.com/")' && \
     Rscript -e 'install.packages("getopt", dependencies = TRUE, repos="http://cran.rstudio.com/");'
 
 # Remove the existing symbolic link (if it exists), create a symbolic link to make 'python' refer to 'python3',
