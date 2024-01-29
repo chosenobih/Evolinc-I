@@ -33,6 +33,39 @@ RUN apt-get update && apt-get install -y g++ \
 # Install Biopython
 RUN pip3 install biopython
 
+# Install system dependencies for R and R packages
+RUN apt-get update && apt-get install -y \
+    software-properties-common \
+    dirmngr \
+    gnupg \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev \
+    libfontconfig1-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    libfreetype6-dev \
+    libpng-dev \
+    libtiff5-dev \
+    libjpeg-dev \
+    libpq-dev
+
+# Manually add the GPG key for the CRAN repository
+RUN apt-key adv --fetch-keys https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc
+RUN add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/'
+
+# Install R
+RUN apt-get update && apt-get install -y r-base
+
+# Install BiocManager in R
+RUN R -e "options(repos = list(CRAN = 'http://cran.rstudio.com')); install.packages('BiocManager')"
+
+# Install Biostrings package using BiocManager and log the output
+RUN R -e "BiocManager::install('Biostrings', ask=FALSE)" \
+    && R -e "packageVersion('Biostrings')"
+# Install additional R packages
+RUN R -e "install.packages(c('dplyr', 'RPostgreSQL', 'httr', 'openssl', 'splitstackshape', 'getopt'))"
+
 # Downlaod and install conda
 RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
     wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py39_23.11.0-2-Linux-x86_64.sh -O ~/miniconda.sh && \
@@ -46,7 +79,7 @@ RUN conda config --add channels conda-forge && \
 
 # Conda packages
 RUN conda install numpy -y && \
-    conda install pandas -y && \
+    #conda install pandas -y && \
     conda install bedops==2.4.41 -c bioconda -y && \
     conda install bedtools==2.31.1 -c bioconda -y && \
     conda install samtools==1.19.1 -c bioconda -y && \
@@ -55,6 +88,7 @@ RUN conda install numpy -y && \
     conda install transdecoder==5.5.0 -c bioconda -y && \
     conda install diamond==0.9.10 -c bioconda && \
     conda install matplotlib-base -c conda-forge -y && \
+    conda install gffread==0.12.1 -c bioconda -y && \
     conda install python -y
 
 # Cufflinks
@@ -67,38 +101,6 @@ WORKDIR /evolinc_docker
 RUN curl -L http://cpanmin.us | perl - App::cpanminus
 RUN cpanm URI/Escape.pm
 
-RUN apt-get update && apt-get install -y \
-    pkg-config \
-    apt-utils \
-    libpq-dev \
-    libcurl4-openssl-dev \
-    libssl-dev \
-    curl \
-    build-essential \
-    gfortran
-
-# temporarily disabling this to debug 1/29
-# Install R packages using Conda
-# RUN conda install -c r r-RPostgreSQL r-httr
-
-# R libraries
-RUN apt-get update && apt-get upgrade -y && \
-    apt-get -y install ca-certificates software-properties-common gnupg2 gnupg1 gnupg && \
-    gpg --batch --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9 && \
-    gpg --export E298A3A825C0D65DFD57CBB651716619E084DAB9 | apt-key add - && \
-    add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/" && \
-    apt-get install -y r-base && \
-    Rscript -e 'install.packages("splitstackshape", dependencies = TRUE, repos="http://cran.rstudio.com/");' && \
-    # Rscript -e 'install.packages("splitstackshape", dependencies = TRUE, repos="http://cran.rstudio.com/");' && \
-    Rscript -e 'install.packages("dplyr", dependencies = TRUE, repos="http://cran.rstudio.com/");' && \
-    Rscript -e 'install.packages("tidyr", dependencies = TRUE, repos="http://cran.rstudio.com/");' && \
-    Rscript -e 'install.packages("data.table", dependencies = TRUE, repos="http://cran.rstudio.com/");' && \
-    Rscript -e 'install.packages("BiocManager", dependencies = TRUE, repos="http://cran.rstudio.com/");' && \
-    Rscript -e "BiocManager::install('Biostrings')" && \
-    # Rscript -e "options(repos = list(CRAN = 'https://cloud.r-project.org/')); install.packages('BiocManager')" && \
-    # Rscript -e "BiocManager::install('Biostrings')" && \
-    Rscript -e 'install.packages("openssl", dependencies = TRUE,  repos="http://cran.rstudio.com/")' && \
-    Rscript -e 'install.packages("getopt", dependencies = TRUE, repos="http://cran.rstudio.com/");'
 
 # Remove the existing symbolic link (if it exists), create a symbolic link to make 'python' refer to 'python3',
 # And make Python 3 the default Python 
@@ -127,7 +129,6 @@ ADD *.sh *.py *.R /evolinc_docker/
 RUN chmod +x /evolinc_docker/evolinc-part-I.sh && cp /evolinc_docker/evolinc-part-I.sh $BINPATH
 WORKDIR /
 
-RUN conda install gffread==0.12.1 -c bioconda -y
 
 # Setting paths to all the softwares
 ENV PATH /evolinc_docker/cufflinks-2.2.1.Linux_x86_64/:$PATH
