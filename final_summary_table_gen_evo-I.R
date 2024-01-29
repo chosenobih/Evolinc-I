@@ -1,9 +1,8 @@
-# Install dependencies
-# library(Biostrings)
-# library(dplyr)
-# library(getopt)
-# library(splitstackshape)
-# library(data.table)
+library(dplyr)
+library(getopt)
+library(Biostrings)
+library(splitstackshape)
+library(data.table)
 
 
 args<-commandArgs(TRUE)
