@@ -75,8 +75,9 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     gfortran
 
+# temporarily disabling this to debug 1/29
 # Install R packages using Conda
-RUN conda install -c r r-RPostgreSQL r-httr
+# RUN conda install -c r r-RPostgreSQL r-httr
 
 # R libraries
 RUN apt-get update && apt-get upgrade -y && \
