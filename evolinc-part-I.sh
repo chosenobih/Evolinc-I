@@ -628,6 +628,10 @@ rm -r ../transcripts_u_filter.fa.transdecoder_dir
 #rm ../*.fa*.*
 rm ../referencegenome.fa.fai
 
+if [ ! -z $blastfile ]; then
+	rm ../*.bck ../*.des ../*.prj ../*.sds ../*.ssp ../*.suf ../*.tis
+fi
+
 ### Clean up fasta headers
 cd ../$output
 sed -i 's/_/./g' lincRNAs.fa
