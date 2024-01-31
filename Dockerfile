@@ -91,11 +91,11 @@ RUN conda install numpy -y && \
     conda install gffread==0.12.1 -c bioconda -y && \
     conda install python -y
 
-# Cufflinks
-RUN wget -O- http://cole-trapnell-lab.github.io/cufflinks/assets/downloads/cufflinks-2.2.1.Linux_x86_64.tar.gz | tar xzvf -
-
 ENV BINPATH /usr/bin
 WORKDIR /evolinc_docker
+
+# Cufflinks
+RUN wget -O- http://cole-trapnell-lab.github.io/cufflinks/assets/downloads/cufflinks-2.2.1.Linux_x86_64.tar.gz | tar xzvf -
 
 # cpan
 RUN curl -L http://cpanmin.us | perl - App::cpanminus
