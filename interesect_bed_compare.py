@@ -5,11 +5,11 @@
 
 import sys
 
-file = open(sys.argv[1]) #intersect file
+file = open(sys.argv[1])  # intersect file
 
-file_2 = open(sys.argv[2]) #lincRNA_final_transcripts.fa
+file_2 = open(sys.argv[2])  # lincRNA_final_transcripts.fa
 
-file_3 = open(sys.argv[3], "w") #lincRNA_overlapping_known_final_transcripts.fa
+file_3 = open(sys.argv[3], "w")  # lincRNA_overlapping_known_final_transcripts.fa
 
 result = []
 
@@ -43,9 +43,9 @@ for ele in set(result):
             del dic[kee]
 
 for kee2, val2 in dic.items():
-	kee2 = ">"+kee2
-	val2 = val2.lstrip()
-	file_3.write(kee2)
-	file_3.write("\n")
-	file_3.write(val2)
-	file_3.write("\n")
+    kee2 = ">"+kee2
+    val2 = val2.lstrip()
+    file_3.write(kee2)
+    file_3.write("\n")
+    file_3.write(val2)
+    file_3.write("\n")
